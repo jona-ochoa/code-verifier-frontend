@@ -2,6 +2,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { login } from '../../services/AuthService';
 import { AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const loginSchema = Yup.object().shape(
     {
@@ -15,7 +16,10 @@ const LoginForm = () => {
         email: '',
         password: ''
     }
-    console.log(initialCredential)
+    console.log(initialCredential);
+
+    const navigate = useNavigate();
+
     return (
         <div>
             <h4>Login Form</h4>
@@ -24,10 +28,11 @@ const LoginForm = () => {
                 initialValues={initialCredential}
                 validationSchema={loginSchema}
                 onSubmit={async (values) => {
-                    login(values.email, values.password).then((response: AxiosResponse) => {
+                    login(values.email, values.password).then(async (response: AxiosResponse) => {
                         if (response.status === 200) {
                             if (response.data.token) {
-                                sessionStorage.setItem('sessionJWTToken', response.data.token)
+                                await sessionStorage.setItem('sessionJWTToken', response.data.token)
+                                navigate('/');
                             } else {
                                 throw new Error('Invalid token')
                             }
@@ -41,7 +46,13 @@ const LoginForm = () => {
                 }}
             >
                 {
-                    ({ values, touched, errors, isSubmitting, handleChange, handleBlur }) =>
+                    ({
+                        // values, 
+                        touched,
+                        errors,
+                        isSubmitting,
+                        // handleChange, handleBlur 
+                    }) =>
                     (
                         <Form>
                             <label htmlFor="email">Email</label>
