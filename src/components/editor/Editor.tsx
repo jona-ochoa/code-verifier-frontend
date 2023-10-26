@@ -1,30 +1,29 @@
 import { Highlight, themes } from "prism-react-renderer";
 
-// interface EditorProps {
-//     lenguage: any,
-//     children: any
-//     { lenguage, children }: EditorProps
+//     const codeBlock = `
+// const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
+//   return (
+//     <div>
+//       <h2>{item.name}</h2>
+//       <p>Price: {item.price}</p>
+//       <p>Quantity: {item.quantity}</p>
+//     </div>
+//   );
 // }
+// `
 
-export const Editor = () => {
+interface EditorProps {
+    children: any
 
-    const codeBlock = `
-const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
-  return (
-    <div>
-      <h2>{item.name}</h2>
-      <p>Price: {item.price}</p>
-      <p>Quantity: {item.quantity}</p>
-    </div>
-  );
 }
-`
+
+export const Editor = ({ children }: EditorProps) => {
 
     return (
         <Highlight
             theme={themes.shadesOfPurple}
-            code={codeBlock}
-            language="tsx">
+            code={children}
+            language="jsx">
             {({ style, tokens, getLineProps, getTokenProps }) => (
                 <pre style={style}>
                     {tokens.map((line, i) => (
