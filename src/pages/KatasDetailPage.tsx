@@ -57,13 +57,13 @@ const KatasDetailPage = () => {
           <div style={{ alignItems: "center", justifyContent: "center" }}> Rating: <StarIcon color="warning" /> {kata?.stars}/5</div>
           <h4> Intents: {kata?.intents} </h4>
           <h4> Level: {kata?.level} </h4>
-        
-            <Button 
-              variant="contained" 
-              onClick={() => setShowSolution(!showSolution)}
-            >
-              {showSolution ? 'Show Solution' : 'Hide Solution'}
-            </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => setShowSolution(!showSolution)}
+          >
+            {showSolution ? 'Show Solution' : 'Hide Solution'}
+          </Button>
           {showSolution ? null : <Editor>{kata?.solution}</Editor>}
         </Card>
         :
