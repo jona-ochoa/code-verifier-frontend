@@ -7,31 +7,38 @@ import PersonIcon from '@mui/icons-material/Person';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BarCharIcon from '@mui/icons-material/BarChart';
 
+import { useNavigate } from 'react-router-dom';
 
-export const MenuItems = (
-    <React.Fragment>
-        {/* Katas */}
-        <ListItemButton>
-            <ListItemIcon>
-                <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Katas" />
-        </ListItemButton>
+const MenuItems = () => {
+    const navigate = useNavigate();
+    return (
 
-        {/* Users */}
-        <ListItemButton>
-            <ListItemIcon>
-                <PersonIcon />
-            </ListItemIcon>
-            <ListItemText primary="Users" />
-        </ListItemButton>
+        <React.Fragment>
+            {/* Katas */}
+            <ListItemButton onClick={() => navigate('/katas')}>
+                <ListItemIcon>
+                    <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Katas" />
+            </ListItemButton>
 
-        {/* Ranking */}
-        <ListItemButton>
-            <ListItemIcon>
-                <BarCharIcon />
-            </ListItemIcon>
-            <ListItemText primary="Ranking" />
-        </ListItemButton>
-    </React.Fragment>
-  )
+            {/* Users */}
+            <ListItemButton onClick={() => navigate('/')}>
+                <ListItemIcon>
+                    <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+            </ListItemButton>
+
+            {/* Ranking */}
+            <ListItemButton onClick={() => navigate('/')}>
+                <ListItemIcon>
+                    <BarCharIcon />
+                </ListItemIcon>
+                <ListItemText primary="Ranking" />
+            </ListItemButton>
+        </React.Fragment>
+    )
+}
+
+export default MenuItems;

@@ -1,101 +1,184 @@
-// import {useState} from 'react'
+import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { register } from '../../services/AuthService';
 import { AxiosResponse } from 'axios';
+import {
+  Container,
+  Typography,
+  Avatar,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Box,
+  Checkbox,
+  Link,
+  TextField,
+  Button,
+  FormHelperText,
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useNavigate } from 'react-router-dom';
 
-const registerSchema = Yup.object().shape(
-  {
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().email('Invalid email Format').required('Email is required'),
-    password: Yup.string().min(4, 'Minimo 3 character').max(10, 'Max 10 characters').required('Password is required'),
-    confirm: Yup.string().label('confirm password').required().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    age: Yup.number().min(18, 'You must  be over 18 years old').required('Age is required')
-  }
-)
+const registerSchema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
+  email: Yup.string().email('Invalid email format').required('Email is required'),
+  password: Yup.string().min(4, 'Minimum 4 characters').max(10, 'Maximum 10 characters').required('Password is required'),
+  confirm: Yup.string().label('Confirm password').required().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  age: Yup.number().min(18, 'You must be over 18 years old').required('Age is required'),
+});
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+  
   const initialCredential = {
     email: '',
     password: '',
     name: '',
     confirm: '',
-    age: 18
-  }
-  console.log(initialCredential)
-  return (
-    <div>
-      <h4>Register Form</h4>
-      {/* FORMIK COMPONENT */}
-      <Formik
-        initialValues={initialCredential}
-        validationSchema={registerSchema}
-        onSubmit={async (values) => {
-          register(values.name, values.email, values.password, values.age).then((response: AxiosResponse) => {
-            if (response.status === 200) {
-              alert(JSON.stringify(response.data))
-              console.log(response.data)
-            } else {
-              throw new Error('Error server')
-            }
-          }).catch((error) => {
-            console.error("[Register Error]: ", error);
-          })
+    age: 18,
+  };
 
+  const handleRegister = async (values: any) => {
+    try {
+      const response: AxiosResponse = await register(values.name, values.email, values.password, values.age);
+      if (response.status === 200) {
+        console.log(response.data);
+        navigate('/')
+      } else {
+        throw new Error('Error server');
+      }
+    } catch (error) {
+      console.error("[Register Error]: ", error);
+    }
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        {
-          ({ 
-            // values, 
-            touched, 
-            errors, 
-            isSubmitting, 
-            // handleChange, 
-            // handleBlur 
-          }) =>
-          (
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Register Form
+        </Typography>
+
+        <Formik
+          initialValues={initialCredential}
+          validationSchema={registerSchema}
+          onSubmit={handleRegister}
+        >
+          {({ touched, errors, isSubmitting }) => (
             <Form>
-              <label htmlFor="name">Name</label>
-              <Field id="name" type="text" name="name" placeholder="Example" />
-              {errors.name && touched.name && (
-                <ErrorMessage name="name" component="div"></ErrorMessage>
-              )}
-
-              <label htmlFor="email">Email</label>
-              <Field id="email" type="email" name="email" placeholder="example@email.com" />
-              {errors.email && touched.email && (
-                <ErrorMessage name="email" component="div"></ErrorMessage>
-              )}
-
-              <label htmlFor="password">Password</label>
-              <Field id="password" type="password" name="password" placeholder="Password" />
-              {errors.password && touched.password && (
-                <ErrorMessage name="password" component="div"></ErrorMessage>
-              )}
-
-              <label htmlFor="confirm">Confirm Password</label>
-              <Field id="confirm" type="password" name="confirm" placeholder="Confirm Password" />
-              {errors.confirm && touched.confirm && (
-                <ErrorMessage name="confirm" component="div"></ErrorMessage>
-              )}
-
-              <label htmlFor="age">Age</label>
-              <Field id="age" type="number" name="age" />
-              {errors.age && touched.age && (
-                <ErrorMessage name="age" component="div"></ErrorMessage>
-              )}
-
-              <button type="submit">Register</button>
-
-              {isSubmitting ? (<p>Dending data to registry...</p>) : null}
-
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    required
+                    fullWidth
+                    id="name"
+                    name="name"
+                    label="Name"
+                    autoComplete="name"
+                  />
+                  <ErrorMessage name="name">
+                    {(msg) => <FormHelperText error>{msg}</FormHelperText>}
+                  </ErrorMessage>
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    required
+                    fullWidth
+                    id="email"
+                    name="email"
+                    label="Email Address"
+                    autoComplete="email"
+                  />
+                  <ErrorMessage name="email">
+                    {(msg) => <FormHelperText error>{msg}</FormHelperText>}
+                  </ErrorMessage>
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    required
+                    fullWidth
+                    id="password"
+                    name="password"
+                    label="Password"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  <ErrorMessage name="password">
+                    {(msg) => <FormHelperText error>{msg}</FormHelperText>}
+                  </ErrorMessage>
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    required
+                    fullWidth
+                    id="confirm"
+                    name="confirm"
+                    label="Confirm Password"
+                    type="password"
+                  />
+                  <ErrorMessage name="confirm">
+                    {(msg) => <FormHelperText error>{msg}</FormHelperText>}
+                  </ErrorMessage>
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    as={TextField}
+                    required
+                    fullWidth
+                    id="age"
+                    name="age"
+                    label="Age"
+                    type="number"
+                  />
+                  <ErrorMessage name="age">
+                    {(msg) => <FormHelperText error>{msg}</FormHelperText>}
+                  </ErrorMessage>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                    label="I accept the terms and conditions."
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Register
+              </Button>
+              {isSubmitting ? <Typography>Sending data to registry...</Typography> : null}
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="/login" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
             </Form>
-          )
-        }
+          )}
+        </Formik>
+      </Box>
+    </Container>
+  );
+};
 
-      </Formik>
-    </div>
-  )
-}
-
-export default RegisterForm
+export default RegisterForm;
